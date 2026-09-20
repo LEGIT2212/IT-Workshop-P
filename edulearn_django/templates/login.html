@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - EduLearn{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <h2>Login to EduLearn</h2>
+    
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label>Username</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit" class="form-btn">Login to Account</button>
+    </form>
+
+    <div style="text-align:center; margin-top:20px; font-size:14px; color:gray;">
+        Don't have an account yet? 
+        <a href="{% url 'signup' %}" style="color:#2563eb; font-weight:bold; text-decoration:none;">Sign Up here</a>
+    </div>
+</div>
+{% endblock %}

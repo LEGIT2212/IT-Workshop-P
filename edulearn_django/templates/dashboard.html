@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Learning Dashboard - EduLearn{% endblock %}
+
+{% block content %}
+<div style="padding:50px 8%;">
+    <div style="background:white; padding:35px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:40px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <h1 style="color:#111827; font-size:32px;">Welcome back, {{ user.first_name|default:user.username }}!</h1>
+            <p style="color:gray; margin-top:6px;">Track your ongoing courses, study notes, and test performances.</p>
+        </div>
+        <div style="display:flex; gap:20px;">
+            <div style="text-align:center; background:#eff6ff; padding:15px 25px; border-radius:10px;">
+                <div style="font-size:26px; font-weight:bold; color:#2563eb;">{{ enrollments.count }}</div>
+                <div style="font-size:13px; color:#4b5563;">Enrolled Courses</div>
+            </div>
+            <div style="text-align:center; background:#f0fdf4; padding:15px 25px; border-radius:10px;">
+                <div style="font-size:26px; font-weight:bold; color:#16a34a;">{{ avg_score }}%</div>
+                <div style="font-size:13px; color:#4b5563;">Average Score</div>
+            </div>
+            <div style="text-align:center; background:#fef3c7; padding:15px 25px; border-radius:10px;">
+                <div style="font-size:26px; font-weight:bold; color:#d97706;">{{ passed_count }}</div>
+                <div style="font-size:13px; color:#4b5563;">Quizzes Passed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrolled Courses -->
+    <h2 style="margin-bottom:25px; color:#111827;">My Enrolled Courses</h2>
+    <div class="course-container" style="margin-bottom:50px;">
+        {% for enrollment in enrollments %}
+        <div class="course-card">
+            <img src="{{ enrollment.course.image_url }}" alt="{{ enrollment.course.title }}">
+            <div class="course-meta">
+                <span>{{ enrollment.course.category.name }}</span>
+                <span>Progress: {{ enrollment.progress_percent }}%</span>
+            </div>
+            <h3>{{ enrollment.course.title }}</h3>
+            
+            <div style="padding:0 15px; margin-bottom:15px;">
+                <div style="background:#e5e7eb; height:8px; border-radius:4px; overflow:hidden;">
+                    <div style="background:#2563eb; height:100%; width:{{ enrollment.progress_percent }}%;"></div>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <a href="{% url 'course_detail' slug=enrollment.course.slug %}" class="btn">Continue Learning</a>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column:span 3; background:white; padding:40px; border-radius:12px; text-align:center;">
+            <p style="color:gray; font-size:16px; margin-bottom:15px;">You have not enrolled in any courses yet.</p>
+            <a href="{% url 'courses' %}" class="btn signup">Browse Course Catalog</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Quiz History -->
+    <h2 style="margin-bottom:25px; color:#111827;">Recent Test & Quiz Results</h2>
+    <div style="background:white; border-radius:15px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.08); overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+                <tr style="border-bottom:2px solid #e5e7eb; color:#6b7280; font-size:14px;">
+                    <th style="padding:12px;">Quiz Title</th>
+                    <th style="padding:12px;">Course</th>
+                    <th style="padding:12px;">Score</th>
+                    <th style="padding:12px;">Percentage</th>
+                    <th style="padding:12px;">Status</th>
+                    <th style="padding:12px;">Submitted At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in results %}
+                <tr style="border-bottom:1px solid #f3f4f6;">
+                    <td style="padding:16px 12px; font-weight:600; color:#111827;">{{ res.quiz.title }}</td>
+                    <td style="padding:16px 12px; color:#4b5563;">{{ res.quiz.course.title }}</td>
+                    <td style="padding:16px 12px; color:#111827;">{{ res.score }} / {{ res.total_questions }}</td>
+                    <td style="padding:16px 12px; font-weight:bold; color:#2563eb;">{{ res.percentage }}%</td>
+                    <td style="padding:16px 12px;">
+                        {% if res.passed %}
+                            <span style="background:#dcfce7; color:#16a34a; font-weight:bold; font-size:12px; padding:4px 10px; border-radius:12px;">PASSED</span>
+                        {% else %}
+                            <span style="background:#fee2e2; color:#dc2626; font-weight:bold; font-size:12px; padding:4px 10px; border-radius:12px;">FAILED</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding:16px 12px; color:#6b7280; font-size:13px;">{{ res.submitted_at|date:"M d, Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="padding:30px; text-align:center; color:gray;">
+                        No quiz attempts recorded yet. Take your first test from any enrolled course!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

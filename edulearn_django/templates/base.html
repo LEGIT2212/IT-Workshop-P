@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EduLearn - Online Learning Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="{% url 'home' %}" class="logo">EduLearn</a>
+
+        <ul>
+            <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+            <li><a href="{% url 'courses' %}" class="{% if request.resolver_match.url_name == 'courses' %}active{% endif %}">Courses</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+                {% if user.is_staff or user.is_superuser %}
+                    <li><a href="{% url 'admin_dashboard' %}" class="admin-badge">Admin Portal</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+
+        <div class="buttons">
+            {% if user.is_authenticated %}
+                <span style="font-weight:600; color:#374151; margin-right:8px;">Hello, {{ user.first_name|default:user.username }}</span>
+                <a href="{% url 'logout' %}"><button class="login">Logout</button></a>
+            {% else %}
+                <a href="{% url 'login' %}"><button class="login">Login</button></a>
+                <a href="{% url 'signup' %}"><button class="signup">Sign Up</button></a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <h3>EduLearn</h3>
+        <p>© 2026 All Rights Reserved | Built with Python, Django & MySQL</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}EduLearn - Learn Anywhere, Anytime{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Learn Anywhere, Anytime</h1>
+            <p>
+                Access high-quality online courses from expert teachers.
+                Improve your skills, download comprehensive study notes, and test your knowledge.
+            </p>
+            <a href="{% url 'courses' %}"><button class="hero-btn">Explore Courses</button></a>
+        </div>
+
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop&q=80" alt="Students Learning Online">
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <h1>Popular Categories</h1>
+
+        <div class="category-container">
+            {% for cat in categories %}
+            <a href="{% url 'courses' %}?category={{ cat.slug }}" class="card">
+                <h3>{{ cat.name }}</h3>
+                <p>{{ cat.total_courses|default:cat.courses.count }} Courses</p>
+            </a>
+            {% empty %}
+            <div class="card"><h3>Programming</h3><p>12 Courses</p></div>
+            <div class="card"><h3>Web Development</h3><p>18 Courses</p></div>
+            <div class="card"><h3>Data Science</h3><p>9 Courses</p></div>
+            <div class="card"><h3>Graphic Design</h3><p>7 Courses</p></div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Courses -->
+    <section class="courses">
+        <h2>Featured Courses</h2>
+
+        <div class="course-container">
+            {% for course in courses %}
+            <div class="course-card">
+                <img src="{{ course.image_url }}" alt="{{ course.title }}">
+                <div class="course-meta">
+                    <span>{{ course.category.name }}</span>
+                    <span>By {{ course.instructor }}</span>
+                </div>
+                <h3>{{ course.title }}</h3>
+                <p>{{ course.description|truncatewords:18 }}</p>
+                <div class="card-actions">
+                    <a href="{% url 'course_detail' slug=course.slug %}" class="btn">View Course</a>
+                </div>
+            </div>
+            {% empty %}
+            <p style="text-align:center; grid-column:span 3; color:gray;">No courses available right now.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats">
+        <div class="stat">
+            <h2>{{ stats.students }}+</h2>
+            <p>Students</p>
+        </div>
+        <div class="stat">
+            <h2>{{ stats.courses }}+</h2>
+            <p>Courses</p>
+        </div>
+        <div class="stat">
+            <h2>{{ stats.teachers }}+</h2>
+            <p>Teachers</p>
+        </div>
+        <div class="stat">
+            <h2>{{ stats.success_rate }}%</h2>
+            <p>Success Rate</p>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2>Student Reviews</h2>
+
+        <div class="review-container">
+            <div class="review">
+                <p>
+                    "Excellent platform. Easy to learn and understand lessons. The Django and MySQL course helped me land my first junior developer role!"
+                </p>
+                <h4>- John Doe</h4>
+            </div>
+
+            <div class="review">
+                <p>
+                    "The quizzes and instant test feedback really helped me validate my Python skills. The study notes are also very well organized."
+                </p>
+                <h4>- Emma Watson</h4>
+            </div>
+
+            <div class="review">
+                <p>
+                    "Intuitive dashboard and practical assignments. Being able to track my learning progress keeps me motivated every day."
+                </p>
+                <h4>- Priya Sharma</h4>
+            </div>
+        </div>
+    </section>
+{% endblock %}

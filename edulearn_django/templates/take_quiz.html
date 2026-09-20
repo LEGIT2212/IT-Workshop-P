@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ quiz.title }} - EduLearn{% endblock %}
+
+{% block content %}
+<div class="quiz-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:2px solid #f3f4f6; padding-bottom:16px;">
+        <div>
+            <h2 style="color:#111827;">{{ quiz.title }}</h2>
+            <p style="color:gray; font-size:14px; margin-top:4px;">Course: {{ quiz.course.title }}</p>
+        </div>
+        <div style="background:#eff6ff; color:#1d4ed8; padding:8px 14px; border-radius:8px; font-weight:bold; font-size:14px;">
+            Passing Score: {{ quiz.passing_score }}%
+        </div>
+    </div>
+
+    {% if quiz.description %}
+    <p style="color:#4b5563; font-size:15px; margin-bottom:25px; line-height:1.6;">{{ quiz.description }}</p>
+    {% endif %}
+
+    <form method="POST" action="{% url 'submit_quiz' quiz_id=quiz.id %}">
+        {% csrf_token %}
+
+        {% for question in questions %}
+        <div class="question-block">
+            <h4>Question {{ forloop.counter }}: {{ question.question_text }}</h4>
+            
+            <label class="option-item">
+                <input type="radio" name="question_{{ question.id }}" value="A" required>
+                <span><strong>A.</strong> {{ question.option_a }}</span>
+            </label>
+
+            <label class="option-item">
+                <input type="radio" name="question_{{ question.id }}" value="B" required>
+                <span><strong>B.</strong> {{ question.option_b }}</span>
+            </label>
+
+            <label class="option-item">
+                <input type="radio" name="question_{{ question.id }}" value="C" required>
+                <span><strong>C.</strong> {{ question.option_c }}</span>
+            </label>
+
+            <label class="option-item">
+                <input type="radio" name="question_{{ question.id }}" value="D" required>
+                <span><strong>D.</strong> {{ question.option_d }}</span>
+            </label>
+        </div>
+        {% endfor %}
+
+        <div style="margin-top:30px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="{% url 'course_detail' slug=quiz.course.slug %}" style="color:#6b7280; text-decoration:none;">← Cancel & Return to Course</a>
+            <button type="submit" class="signup" style="padding:14px 32px; font-size:16px; border:none; border-radius:6px; cursor:pointer;">
+                Submit Quiz & Calculate Score
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

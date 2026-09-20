@@ -1,0 +1,6 @@
+{
+  "name": "EduLearn",
+  "description": "A complete e-learning platform with courses, study notes, interactive quizzes, student tracking, and an admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
