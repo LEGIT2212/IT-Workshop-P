@@ -1,20 +1,50 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# EduLearn
 
-# Run and deploy your AI Studio app
+EduLearn is a Django and MySQL e-learning platform with course browsing,
+student accounts, enrollments, quizzes, results, and an administrator portal.
 
-This contains everything you need to run your app locally.
+## Project Layout
 
-View your app in AI Studio: https://ai.studio/apps/4166e0d5-9435-469e-8564-4fce698fea43
+```text
+manage.py                 Django command-line entry point
+edulearn/                 Django project settings and WSGI module
+courses/                  Courses, quizzes, users, enrollments, and admin
+templates/                Django HTML templates
+static/                   CSS assets
+requirements.txt          Python dependencies
+legacy_frontend/          Archived React/Vite prototype
+```
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+Copy-Item .env.example .env
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
 
+Create the MySQL database first, then update `.env` with the database
+credentials. Never commit `.env` or production credentials.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Main URLs
+
+- Application: `http://127.0.0.1:8000/`
+- Course catalog: `http://127.0.0.1:8000/courses/`
+- Admin site: `http://127.0.0.1:8000/admin/`
+- Admin dashboard: `http://127.0.0.1:8000/admin-dashboard/`
+
+## Deployment
+
+GitHub stores the source code, but GitHub Pages cannot run this Django backend
+or MySQL database. Deploy the application to a Python-capable host such as
+Render, Railway, or a VPS with a managed MySQL database.
+
+Use this production start command:
+
+```text
+gunicorn edulearn.wsgi:application
+```
