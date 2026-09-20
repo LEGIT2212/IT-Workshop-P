@@ -1,6 +1,6 @@
 # EduLearn - Django & MySQL E-Learning Web Application
 
-A full-stack e-learning platform built with **Python**, **Django 4.2+**, and **MySQL**, preserving custom frontend HTML/CSS styling.
+A full-stack e-learning platform built with **Python**, **Django 5.2+**, and **MySQL**, preserving custom frontend HTML/CSS styling.
 
 ---
 

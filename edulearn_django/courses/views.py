@@ -279,15 +279,12 @@ def user_signup(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
-            role = form.cleaned_data.get('role', 'student')
-            if role in ['admin', 'staff']:
-                user.is_staff = True
             user.save()
             
-            UserProfile.objects.create(user=user, role=role)
+            UserProfile.objects.create(user=user, role='student')
             login(request, user)
             messages.success(request, f"Welcome to EduLearn, {user.first_name or user.username}!")
-            return redirect('admin_dashboard' if role == 'admin' else 'dashboard')
+            return redirect('dashboard')
     else:
         form = UserSignupForm()
 

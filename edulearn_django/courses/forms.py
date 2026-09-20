@@ -9,10 +9,6 @@ class UserSignupForm(forms.ModelForm):
     password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-input', 'placeholder': 'Confirm your password'
     }))
-    role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES, initial='student', widget=forms.Select(attrs={
-        'class': 'form-input'
-    }))
-
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
